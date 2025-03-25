@@ -68,12 +68,13 @@
                     </option>
                 </select>
             </div>
-            <!--            <div class="mb-4">-->
-            <!--                <input type="file"-->
-            <!--                       v-model="entries.images"-->
-            <!--                       class="border border-gray-600 p-2 rounded w-1/4"-->
-            <!--                >-->
-            <!--            </div>-->
+            <div class="mb-4">
+                <input type="file"
+                       multiple
+                       @change="setImages"
+                       class="border border-gray-600 p-2 rounded w-1/4"
+                >
+            </div>
             <!--            <div class="mb-4">-->
             <!--                <select class="border border-gray-600 p-2 rounded w-1/4" v-model="entries.params">-->
             <!--                    <option :value="null" disabled selected>Выберите родительский товар</option>-->
@@ -121,7 +122,7 @@ export default {
                     category_id: null,
                     product_group_id: null
                 },
-                images: null,
+                images: Array,
                 params: []
             },
             success: false
@@ -130,7 +131,11 @@ export default {
 
     methods: {
         storeProduct() {
-            axios.post(route('admin.products.store'), this.entries)
+            axios.post(route('admin.products.store'), this.entries, {
+                headers: {
+                    'Content-Type' : 'multipart/form-data'
+                }
+            })
                 .then(response => {
                     console.log(response);
                     this.entries.product = {
@@ -138,6 +143,10 @@ export default {
                         product_group_id: null
                     }
                 })
+        },
+        setImages(event) {
+            // console.log(event.target.files);
+            this.entries.images = event.target.files;
         }
     }
 }

@@ -65,8 +65,10 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $product = ProductResource::make($product)->resolve();
+        $categories = CategoryResource::collection(Category::all())->resolve();
+        $productGroups = ProductGroupResource::collection(ProductGroup::all())->resolve();
 
-        return inertia('Admin/Product/Edit', compact('product'));
+        return inertia('Admin/Product/Edit', compact('product', 'categories', 'productGroups'));
     }
 
     /**

@@ -2,8 +2,8 @@
     <div>
         <div class="mb-4">
             <Link
-                :href="route('admin.params.index')"
-                class="inline-block py-2 px-3 bg-sky-600 border-sky-700 text-white rounded"
+                :href="route('admin.products.index')"
+                class="inline-block py-2 px-3 bg-blue-500 border-sky-700 text-white rounded hover:bg-blue-600 transition duration-200"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                      stroke="currentColor" class="size-6">
@@ -11,15 +11,15 @@
                 </svg>
             </Link>
 
-            <div>
-                <table class="table border-collapse table-auto w-full text-sm mt-2 rounded-lg overflow-hidden">
+            <div class="mt-6">
+                <table class="table border-collapse table-auto w-full text-sm rounded-lg overflow-hidden shadow-lg">
                     <tbody class="dark:bg-slate-800">
                     <tr>
                         <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
                             ID
                         </td>
                         <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                            {{ param.id }}
+                            {{ product.id }}
                         </td>
                     </tr>
 
@@ -28,32 +28,31 @@
                             Заголовок
                         </td>
                         <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                            {{ param.title }}
+                            {{ product.title }}
                         </td>
                     </tr>
                     <tr>
                         <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                            Тип фильтра
+                            Описание
                         </td>
                         <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                            {{ param.filter_type }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                            Заголовок типа фильтра
-                        </td>
-                        <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                            {{ param.filter_type_title }}
+                            {{ product.description }}
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
+
+            <div class="mt-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div v-for="image in product.images" :key="image.id" class="relative overflow-hidden rounded-lg shadow-lg">
+                        <img :src="image.url" :alt="product.title" class="w-full h-auto object-cover transition-transform duration-200 hover:scale-105" />
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
-
 
 <script>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
@@ -65,7 +64,7 @@ export default {
     layout: AdminLayout,
 
     props: {
-        param: Object
+        product: Object
     },
     components: {
         Link
@@ -73,7 +72,6 @@ export default {
 }
 </script>
 
-
 <style scoped>
-
+/* Дополнительные стили, если необходимо */
 </style>

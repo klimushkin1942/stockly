@@ -3,7 +3,7 @@
         <div class="mb-4">
             <Link
                 :href="route('admin.product-groups.index')"
-                class="inline-block py-2 px-3 bg-sky-600 border-sky-700 text-white rounded"
+                class="inline-block py-2 px-3 bg-blue-500 border-sky-700 text-white rounded hover:bg-blue-600 transition duration-200"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                      stroke="currentColor" class="size-6">
