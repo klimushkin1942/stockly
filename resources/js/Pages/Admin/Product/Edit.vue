@@ -80,11 +80,39 @@
                 >
             </div>
             <div class="mt-6 mb-2">
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    <div v-for="image in product.images" :key="image.id" class="relative overflow-hidden rounded-lg shadow-lg">
-                        <img :src="image.url" :alt="product.title" class="w-full h-auto object-cover transition-transform duration-200 hover:scale-105" />
+                <transition-group
+                    name="image-list"
+                    tag="div"
+                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+                >
+                    <div
+                        v-for="image in product.images"
+                        :key="image.id"
+                        class="relative overflow-hidden rounded-lg shadow-lg group image-item"
+                    >
+                        <img
+                            :src="image.url"
+                            :alt="product.title"
+                            class="w-full h-auto object-cover transition-transform duration-200 hover:scale-105"
+                        />
+
+                        <button
+                            class="absolute top-2 right-2 p-1 bg-white/80 rounded-full hover:bg-white transition"
+                            @click.prevent="deleteImage(image)"
+                        >
+                            <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 32 32"
+                                fill="red"
+                                class="hover:scale-110 transition-transform"
+                            >
+                                <path d="M16,2A14,14,0,1,0,30,16,14,14,0,0,0,16,2Zm0,26A12,12,0,1,1,28,16,12,12,0,0,1,16,28Z"></path>
+                                <polygon points="19.54 11.05 16 14.59 12.46 11.05 11.05 12.46 14.59 16 11.05 19.54 12.46 20.95 16 17.41 19.54 20.95 20.95 19.54 17.41 16 20.95 12.46 19.54 11.05"></polygon>
+                            </svg>
+                        </button>
                     </div>
-                </div>
+                </transition-group>
             </div>
             <div>
                 <div class="mb-4">
@@ -123,23 +151,45 @@ export default {
             success: false,
             entries: {
                 product: this.product,
-                images: null
+                images: null,
+                _method: 'patch'
             }
         }
     },
     methods: {
         updateProduct() {
-            axios.patch(route('admin.products.update', this.product.id), this.entries)
+            axios.post(route('admin.products.update', this.product.id), this.entries, {
+                headers: {
+                    'Content-Type' : 'multipart/form-data'
+                }
+            })
                 .then(response => {
                     this.success = true;
                     setTimeout(() => {
                         this.success = false;
                     }, 2000);
+                    this.product.images = response.data.images
                 })
         },
         setImages(event) {
-            // console.log(event.target.files);
             this.entries.images = event.target.files;
+        },
+        deleteImage(image) {
+            const imageElement = event.target.closest('.image-item');
+            if (imageElement) {
+                imageElement.classList.add('removing');
+            }
+
+            setTimeout(() => {
+                axios.delete(route('admin.images.destroy', image.id))
+                    .then(() => {
+                        this.product.images = this.product.images.filter(img => img.id !== image.id);
+                    })
+                    .catch(error => {
+                        if (imageElement) imageElement.classList.remove('removing');
+                        console.error("Ошибка удаления:", error);
+                    });
+            }, 200);
         }
     },
 
@@ -157,12 +207,40 @@ export default {
 
 
 <style scoped>
+/* Существующие стили */
 .fade-enter-active, .fade-leave-active {
-    transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
 }
 
 .fade-enter-from, .fade-leave-to {
     opacity: 0;
 }
 
+/* Новые стили для анимации изображений */
+.image-list-move {
+    transition: transform 0.3s ease;
+}
+
+.image-item {
+    transition: all 0.3s ease;
+}
+
+.image-item.removing {
+    transform: scale(0.8);
+    opacity: 0;
+}
+
+.image-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.image-list-enter-active, .image-list-leave-active {
+    transition: all 0.3s ease;
+}
+
+.image-list-enter-from, .image-list-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+}
 </style>

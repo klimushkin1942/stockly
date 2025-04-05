@@ -145,7 +145,6 @@ export default {
                 })
         },
         setImages(event) {
-            // console.log(event.target.files);
             this.entries.images = event.target.files;
         }
     }

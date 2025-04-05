@@ -11,6 +11,7 @@ use App\Http\Resources\ProductGroup\ProductGroupResource;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductGroup;
+use App\Services\ImageService;
 use App\Services\ProductService;
 use Illuminate\Http\Response;
 
@@ -87,6 +88,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        ImageService::destroyBatch($product->images());
         $product->delete();
 
         return response()->json([
