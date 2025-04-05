@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\StoreRequest;
 use App\Http\Requests\Admin\Product\UpdateRequest;
 use App\Http\Resources\Category\CategoryResource;
+use App\Http\Resources\Param\ParamResource;
 use App\Http\Resources\Product\ProductResource;
 use App\Http\Resources\ProductGroup\ProductGroupResource;
 use App\Models\Category;
+use App\Models\Param;
 use App\Models\Product;
 use App\Models\ProductGroup;
 use App\Services\ImageService;
@@ -35,8 +37,9 @@ class ProductController extends Controller
     {
         $categories = CategoryResource::collection(Category::all())->resolve();
         $productGroups = ProductGroupResource::collection(ProductGroup::all())->resolve();
+        $params = ParamResource::collection(Param::all())->resolve();
 
-        return inertia('Admin/Product/Create', compact('categories', 'productGroups'));
+        return inertia('Admin/Product/Create', compact('categories', 'productGroups', 'params'));
     }
 
     /**
@@ -44,7 +47,7 @@ class ProductController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $data = $request->validated();
+        $data = $request->validationData();
         $product = ProductService::store($data);
 
         return ProductResource::make($product)->resolve();

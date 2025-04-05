@@ -9,6 +9,12 @@
             </Link>
         </div>
 
+        <transition name="fade">
+            <div v-if="success" class="p-4 bg-green-500 rounded mb-4 text-white">
+                Успешное создание!
+            </div>
+        </transition>
+
         <div>
             <div class="mb-4">
                 <input type="text"
@@ -59,7 +65,8 @@ export default {
         return {
             param: {
                 filter_type: null,
-            }
+            },
+            success: false
         }
     },
 
@@ -67,10 +74,14 @@ export default {
         storeParam() {
             axios.post(route('admin.params.store'), this.param)
                 .then(response => {
-                    console.log(response);
                     this.param = {
                         filter_type: null
                     }
+
+                    this.success = true;
+                    setTimeout(() => {
+                        this.success = false;
+                    }, 2000);
                 })
         }
     }
@@ -78,6 +89,12 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s ease-in-out;
+}
 
+.fade-enter-from, .fade-leave-to {
+    opacity: 0;
+}
 </style>

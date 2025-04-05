@@ -74,7 +74,6 @@ export default {
         storeCategory() {
             axios.post(route('admin.categories.store'), this.category)
                 .then(response => {
-                    console.log(response);
                     this.category = {
                         parent_id: null
                     }

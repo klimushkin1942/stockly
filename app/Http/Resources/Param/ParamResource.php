@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Param;
 
-use App\Enums\Param\FilterTypeEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
