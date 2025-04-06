@@ -76,7 +76,8 @@
                 </select>
             </div>
             <div class="mb-4">
-                <input type="file"
+                <input ref="image_input"
+                       type="file"
                        multiple
                        @change="setImages"
                        class="border border-gray-600 p-2 rounded w-1/4"
@@ -93,7 +94,8 @@
                     </select>
                 </div>
                 <div class="mr-2">
-                    <input v-model="paramOption.value" type="text" placeholder="Значение" class="border border-gray-600 p-2 rounded">
+                    <input v-model="paramOption.value" type="text" placeholder="Значение"
+                           class="border border-gray-600 p-2 rounded">
                 </div>
                 <div>
                     <a href="#" @click.prevent="setParam" class="inline-block bg-white border-gray-200 px-3 py-2">+</a>
@@ -102,7 +104,7 @@
 
             <div class="mb-4">
                 <div v-for="paramEntries in entries.params">
-                    {{ paramEntries.title}} - {{ paramEntries.value}}
+                    {{ paramEntries.title }} - {{ paramEntries.value }}
                 </div>
             </div>
 
@@ -142,7 +144,7 @@ export default {
     data() {
         return {
             paramOption: {
-              paramObject: {}
+                paramObject: {}
             },
             entries: {
                 product: {
@@ -164,10 +166,15 @@ export default {
                 }
             })
                 .then(response => {
-                    this.entries.product = {
-                        category_id: null,
-                        product_group_id: null
+                    this.entries = {
+                        product: {
+                            category_id: null,
+                            product_group_id: null
+                        },
+                        images: [],
+                        params: []
                     }
+                    this.$refs.image_input.value = null;
                 })
         },
         setImages(event) {

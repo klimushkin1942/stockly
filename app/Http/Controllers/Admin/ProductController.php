@@ -13,16 +13,17 @@ use App\Models\Category;
 use App\Models\Param;
 use App\Models\Product;
 use App\Models\ProductGroup;
-use App\Services\ImageService;
 use App\Services\ProductService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Inertia\ResponseFactory;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): \Inertia\Response|ResponseFactory
     {
         $products = Product::all();
         $products = ProductResource::collection($products)->resolve();
@@ -33,7 +34,7 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): \Inertia\Response|ResponseFactory
     {
         $categories = CategoryResource::collection(Category::all())->resolve();
         $productGroups = ProductGroupResource::collection(ProductGroup::all())->resolve();
@@ -45,7 +46,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): array
     {
         $data = $request->validationData();
         $product = ProductService::store($data);
@@ -56,7 +57,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show(Product $product): \Inertia\Response|ResponseFactory
     {
         $product = ProductResource::make($product)->resolve();
 
@@ -66,7 +67,7 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit(Product $product): \Inertia\Response|ResponseFactory
     {
         $product = ProductResource::make($product)->resolve();
         $categories = CategoryResource::collection(Category::all())->resolve();
@@ -78,7 +79,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, Product $product)
+    public function update(UpdateRequest $request, Product $product): array
     {
         $data = $request->validated();
         $product = ProductService::update($product, $data);
@@ -89,9 +90,8 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(Product $product): JsonResponse
     {
-        ImageService::destroyBatch($product->images());
         $product->delete();
 
         return response()->json([

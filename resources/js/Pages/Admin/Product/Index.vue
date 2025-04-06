@@ -95,7 +95,7 @@ export default {
         deleteProduct(product) {
             axios.delete(route('admin.products.destroy', product.id))
                 .then(response => {
-                    this.products = this.filter(productsData => productsData.id !== product.id);
+                    this.productsData = this.productsData.filter(productData => productData.id !== product.id);
                 })
         }
     }
