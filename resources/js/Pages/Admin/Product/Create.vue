@@ -98,13 +98,27 @@
                            class="border border-gray-600 p-2 rounded">
                 </div>
                 <div>
-                    <a href="#" @click.prevent="setParam" class="inline-block bg-white border-gray-200 px-3 py-2">+</a>
+                    <a href="#" @click.prevent="setParam" class="inline-block py-2 px-3 bg-blue-500 border-sky-700 text-white rounded hover:bg-blue-600 transition duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                        </svg>
+                    </a>
                 </div>
             </div>
 
             <div class="mb-4">
-                <div v-for="paramEntries in entries.params">
-                    {{ paramEntries.title }} - {{ paramEntries.value }}
+                <div v-for="paramEntries in entries.params" class="flex items-center">
+                    <div class="mr-2">
+                        {{ paramEntries.title }} - {{ paramEntries.value }}
+                    </div>
+                    <div @click.prevent="deleteParam(paramEntries)">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="red" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                        </svg>
+                    </div>
                 </div>
             </div>
 
@@ -186,6 +200,11 @@ export default {
                 title: this.paramOption.paramObject.title,
                 value: this.paramOption.value
             })
+        },
+        deleteParam(paramEntries) {
+            this.entries.params = this.entries.params.filter(
+                (param) => param !== paramEntries
+            );
         }
     }
 }
