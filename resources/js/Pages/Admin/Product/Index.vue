@@ -19,6 +19,9 @@
                             Заголовок
                         </th>
                         <th class="border-b font-medium p-4 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                            Артикул
+                        </th>
+                        <th class="border-b font-medium p-4 pb-3 text-slate-400 dark:text-slate-200 text-left">
                             Цена
                         </th>
                         <th class="border-b font-medium p-4 pb-3 text-slate-400 dark:text-slate-200 text-left">
@@ -38,6 +41,9 @@
                             <Link :href="route('admin.products.show', product.id)">
                                 {{ product.title }}
                             </Link>
+                        </td>
+                        <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-200 hover:dark:bg-slate-600 transition duration-200">
+                            {{ product.article }}
                         </td>
                         <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-200">
                             {{ product.price }}₽
