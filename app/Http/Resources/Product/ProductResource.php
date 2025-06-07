@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Product;
 
 use App\Http\Resources\Image\ImageResource;
+use App\Http\Resources\Param\ParamWithPivotValueResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,7 +27,8 @@ class ProductResource extends JsonResource
             'count' => $this->count,
             'price' => $this->price,
             'discount_price' => $this->discount_price,
-            'images' => ImageResource::collection($this->images)->resolve()
+            'images' => ImageResource::collection($this->images)->resolve(),
+            'params' => ParamWithPivotValueResource::collection($this->params)->resolve()
         ];
     }
 }

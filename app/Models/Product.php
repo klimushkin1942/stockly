@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Ramsey\Collection\Collection;
 
 #[ObservedBy(ProductObserver::class)]
 class Product extends Model
@@ -18,7 +19,9 @@ class Product extends Model
 
     public function params(): BelongsToMany
     {
-        return $this->belongsToMany(Param::class, 'param_product', 'product_id', 'param_id');
+        return $this->belongsToMany(
+            Param::class
+        )->withPivot('value');
     }
 
     public function children(): HasMany

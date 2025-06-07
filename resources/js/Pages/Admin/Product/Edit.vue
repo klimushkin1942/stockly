@@ -116,6 +116,44 @@
                     </div>
                 </transition-group>
             </div>
+            <div class="mb-4 flex">
+                <div class="mr-2">
+                    <select v-model="paramOption.paramObject" class="border border-gray-600 p-2 rounded p-2 pr-8">
+                        <option :value="{}" disabled selected>Выберите характеристику</option>
+                        <option v-for="param in params" :value="param">
+                            {{ param.title }}
+                        </option>
+                    </select>
+                </div>
+                <div class="mr-2">
+                    <input v-model="paramOption.value" type="text" placeholder="Значение"
+                           class="border border-gray-600 p-2 rounded">
+                </div>
+                <div>
+                    <a href="#" @click.prevent="setParam"
+                       class="inline-block py-2 px-3 bg-blue-500 border-sky-700 text-white rounded hover:bg-blue-600 transition duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <div v-for="paramEntries in entries.params" class="flex items-center">
+                    <div class="mr-2">
+                        {{ paramEntries.title }} - {{ paramEntries.value }}
+                    </div>
+                    <div @click.prevent="deleteParam(paramEntries)">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="red" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
             <div>
                 <div class="mb-4">
                     <a href="#"
@@ -142,19 +180,23 @@ export default {
     components: {
         Link
     },
-
     props: {
         product: Object,
         categories: Array,
-        productGroups: Array
+        productGroups: Array,
+        params: Array
     },
     data() {
         return {
+            paramOption: {
+                paramObject: {}
+            },
             success: false,
             entries: {
                 product: this.product,
                 images: null,
-                _method: 'patch'
+                _method: 'patch',
+                params: this.product.params
             }
         }
     },
@@ -162,16 +204,23 @@ export default {
         updateProduct() {
             axios.post(route('admin.products.update', this.product.id), this.entries, {
                 headers: {
-                    'Content-Type' : 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data'
                 }
             })
                 .then(response => {
-                    this.success = true;
-                    setTimeout(() => {
-                        this.success = false;
-                    }, 2000);
-                    this.product.images = response.data.images
+                    this.product.images = response.data.images;
+
+                    this.$nextTick(() => {
+                        this.success = true;
+
+                        setTimeout(() => {
+                            this.success = false;
+                        }, 2000);
+                    });
                 })
+                .catch(error => {
+                    console.error("Ошибка обновления:", error);
+                });
         },
         setImages(event) {
             this.entries.images = event.target.files;
@@ -192,12 +241,24 @@ export default {
                         console.error("Ошибка удаления:", error);
                     });
             }, 200);
+        },
+        setParam() {
+            this.entries.params.push({
+                id: this.paramOption.paramObject.id,
+                title: this.paramOption.paramObject.title,
+                value: this.paramOption.value
+            })
+        },
+        deleteParam(paramEntries) {
+            this.entries.params = this.entries.params.filter(
+                (param) => param !== paramEntries
+            );
         }
     },
 
     watch: {
-        param: {
-            handler(newVal, oldVal) {
+        entries: {
+            handler() {
                 this.success = false;
             },
             deep: true

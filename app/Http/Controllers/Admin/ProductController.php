@@ -72,8 +72,9 @@ class ProductController extends Controller
         $product = ProductResource::make($product)->resolve();
         $categories = CategoryResource::collection(Category::all())->resolve();
         $productGroups = ProductGroupResource::collection(ProductGroup::all())->resolve();
+        $params = ParamResource::collection(Param::all())->resolve();
 
-        return inertia('Admin/Product/Edit', compact('product', 'categories', 'productGroups'));
+        return inertia('Admin/Product/Edit', compact('product', 'categories', 'productGroups', 'params'));
     }
 
     /**
@@ -81,7 +82,7 @@ class ProductController extends Controller
      */
     public function update(UpdateRequest $request, Product $product): array
     {
-        $data = $request->validated();
+        $data = $request->validationData();
         $product = ProductService::update($product, $data);
 
         return ProductResource::make($product)->resolve();
